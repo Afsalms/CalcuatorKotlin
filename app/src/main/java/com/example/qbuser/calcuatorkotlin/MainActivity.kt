@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override  fun onClick(v: View?){
         val resultTextView = findViewById<TextView>(R.id.result)
-        var clickedButton = v as Button
+        val clickedButton = v as Button
         when(v.id){
             R.id.button_first, R.id.button_two,
             R.id.button_three, R.id.button_four,
