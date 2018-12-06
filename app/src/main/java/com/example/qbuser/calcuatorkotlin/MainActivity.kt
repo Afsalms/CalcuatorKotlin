@@ -10,6 +10,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
+    var isLastNumber = true
+    var isLastDot = false
+    var isError = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -30,7 +34,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val buttonDivision = findViewById<Button>(R.id.button_division)
         val buttonMultiplcation = findViewById<Button>(R.id.button_multiply)
         val buttonEqual = findViewById<Button>(R.id.button_result)
-        val resultTextView = findViewById<TextView>(R.id.result)
 
         buttonOne.setOnClickListener(this)
         buttonTwo.setOnClickListener(this)
@@ -52,12 +55,28 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override  fun onClick(v: View?){
-        var toastText = "Default"
-        when(v?.id){
-            R.id.button_first -> { toastText = "Botton one clicked"
+        var toastText = "default"
+        val resultTextView = findViewById<TextView>(R.id.result)
+        var clickedButton = v as Button
+        when(v.id){
+            R.id.button_first, R.id.button_two,
+            R.id.button_three, R.id.button_four,
+            R.id.button_five, R.id.button_six,
+            R.id.button_seven, R.id.button_eight,
+            R.id.button_nine, R.id.button_zero -> {
+                                    if(!isError){
+                                        resultTextView.text = resultTextView.text.toString() + clickedButton.text.toString()
+                                        isLastNumber = true
+                                    }
                                  }
-            R.id.button_two -> { toastText = "Button two clicked"}
-            else -> { toastText = "Other button ${v?.id} clicked"}
+            R.id.button_dot -> {
+                                    if(!isError && !isLastDot){
+                                        resultTextView.text = resultTextView.text.toString() + getString(R.string.dot)
+                                        isLastDot = true
+
+                                    }
+                                }
+            else -> { toastText = "Other button ${v.id} clicked"}
         }
         Toast.makeText(this@MainActivity, toastText, Toast.LENGTH_SHORT).show()
     }
