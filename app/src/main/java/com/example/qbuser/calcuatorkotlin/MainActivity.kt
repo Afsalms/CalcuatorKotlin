@@ -5,8 +5,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_main.*
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -55,7 +56,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override  fun onClick(v: View?){
-        var toastText = "default"
         val resultTextView = findViewById<TextView>(R.id.result)
         var clickedButton = v as Button
         when(v.id){
@@ -65,19 +65,51 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.button_seven, R.id.button_eight,
             R.id.button_nine, R.id.button_zero -> {
                                     if(!isError){
-                                        resultTextView.text = resultTextView.text.toString() + clickedButton.text.toString()
+                                        resultTextView.text = resultTextView.text.toString() +
+                                                clickedButton.text.toString()
                                         isLastNumber = true
                                     }
                                  }
             R.id.button_dot -> {
                                     if(!isError && !isLastDot){
-                                        resultTextView.text = resultTextView.text.toString() + getString(R.string.dot)
+                                        resultTextView.text = resultTextView.text.toString() +
+                                                getString(R.string.dot)
                                         isLastDot = true
 
                                     }
                                 }
-            else -> { toastText = "Other button ${v.id} clicked"}
+            R.id.button_clear -> {
+                                    resultTextView.text = ""
+                                    isLastDot = false
+                                    isLastNumber = true
+                                    isError = false
+
+                                    }
+            R.id.button_multiply, R.id.button_plus,
+            R.id.button_minus, R.id.button_division -> {
+                                            if(isLastNumber && !isError){
+                                                resultTextView.text = resultTextView.text.toString() +
+                                                        clickedButton.text.toString()
+                                                isLastNumber = false
+                                                isLastDot = false
+                                            }
+                                    }
+            R.id.button_result -> {
+                if (isLastNumber && !isError) {
+                    var experssionString = resultTextView.text.toString()
+                    val expression = ExpressionBuilder(experssionString).build()
+                    try {
+                        var result = expression.evaluate()
+                        resultTextView.text = result.toString()
+                        isLastDot = true
+                    } catch (e:Exception) {
+                        isError = true
+                        val errorString = "Error"
+                        resultTextView.text = errorString
+                    }
+                }
+
+            }
         }
-        Toast.makeText(this@MainActivity, toastText, Toast.LENGTH_SHORT).show()
     }
 }
